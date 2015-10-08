@@ -12,23 +12,29 @@ function setupLogger(cfg) {
   assume(cfg).is.an('object');
   assume(cfg).includes('name');
   cfg = _.clone(cfg);
-  // Sometimes, just make it easy to show the file and line number.  This is
-  // supposed to be quite slow, so the name is what it is to make it impossible
-  // to claim you didn't know it made things slow
-  if (process.env.LOG_LINE_NUMBERS_AND_BE_VERY_SLOW === '1') {
+
+  // Sometimes, just make it easy to have everything show the file and line
+  // number.  This is supposed to be quite slow, so the name is what it is to
+  // make it impossible to claim you didn't know it made things slow
+  if (process.env.SHOW_LOG_LINE_NUMBERS_AND_BE_SLOW === '1') {
     cfg.src = true;
   }
-  if (process.env.LOG_LEVEL) {
-    assume(allowedLevels).includes(process.env.LOG_LEVEL)
-    cfg.level = process.env.LOG_LEVEL;
-  } else {
-    cfg.level = 'debug';
-  }
+
   let logger = bunyan.createLogger(cfg);
+
+  if (process.env.LOG_LEVEL) {
+    assume(allowedLevels).includes(process.env.LOG_LEVEL);
+    logger.level(process.env.LOG_LEVEL);
+  } else if (!cfg.level) {
+    logger.level('info');
+  }
   assume(logger).does.not.include('debugCompat');
   logger.debugCompat = makeCompat(logger);
   return logger;
 }
+
+// For unit testing!
+setupLogger.bunyan = bunyan
 
 // To support migration away from the debug module that we used to use, we have
 // a compatibility function which we use to provide the same interface as the
