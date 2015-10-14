@@ -2,23 +2,22 @@ let logging = require('../src/log.js');
 let sinon = require('sinon');
 let assume = require('assume');
 let assert = require('assert');
+let slugid = require('slugid');
 
 var MemoryStream = require('memorystream');
 
-// These are needed because we're stubbing them and we need to be able to print
-// to the screen when we're in the stub function
-let _realStdout = process.stdout;
-let _realStderr = process.stderr;
-
 describe('logs', () => {
   let sandbox;
+  let realLogName = process.env.LOG_NAME;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    process.env.LOG_NAME = slugid.v4();
   });
 
   afterEach(() => {
     sandbox.restore();
+    process.env.LOG_NAME = realLogName;
   });
 
   describe('initialization', () => {
@@ -26,7 +25,7 @@ describe('logs', () => {
       let createLogger = sandbox.spy(logging.bunyan, "createLogger");
       let result = logging({name: 'test'});
       let expected = {
-        name: 'test',
+        name: process.env.LOG_NAME,
       };
       assert(createLogger.calledWithExactly(expected));
       assume(result.level()).equals(logging.bunyan.INFO);
@@ -51,10 +50,6 @@ describe('logs', () => {
         level: 'trace',
       });
 
-    });
-
-    it('should have a compat function', () => {
-      assume(log).contains('debugCompat');
     });
 
     it('should have a compat function', () => {

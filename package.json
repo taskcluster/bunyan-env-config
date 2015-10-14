@@ -5,7 +5,7 @@
   "main": "lib/log.js",
   "scripts": {
     "test": "./test/runtests.sh",
-    "compile": "rm -rf lib/ && babel -sd lib/ src/",
+    "compile": "babel-compile -c taskcluster-lib-rules/babel src:lib",
     "pretest": "npm run compile",
     "prepublish": "npm run compile"
   },
@@ -25,9 +25,12 @@
   "homepage": "https://github.com/taskcluster/taskcluster-logging",
   "devDependencies": {
     "babel": "^5.8.23",
+    "babel-compile": "0.0.3",
     "memorystream": "^0.3.1",
     "mocha": "^2.3.3",
-    "sinon": "^1.17.1"
+    "sinon": "^1.17.1",
+    "slugid": "^1.1.0",
+    "taskcluster-lib-rules": "^1.0.5"
   },
   "dependencies": {
     "assume": "^1.3.1",

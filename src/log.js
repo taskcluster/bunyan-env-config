@@ -10,8 +10,14 @@ let allowedLevels = _.keys(bunyan.levelFromName);
 
 function setupLogger(cfg) {
   assume(cfg).is.an('object');
-  assume(cfg).includes('name');
+  //assume(cfg).does.not.includes('name');
   cfg = _.clone(cfg);
+
+  if (!process.env.LOG_NAME) {
+    throw new Error('You must have a LOG_NAME environment variable');
+  }
+
+  cfg.name = process.env.LOG_NAME;
 
   // Sometimes, just make it easy to have everything show the file and line
   // number.  This is supposed to be quite slow, so the name is what it is to
