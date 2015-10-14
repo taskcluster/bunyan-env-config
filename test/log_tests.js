@@ -1,23 +1,19 @@
-let logging = require('../src/log.js');
+let logging = require('../lib/log');
 let sinon = require('sinon');
 let assume = require('assume');
 let assert = require('assert');
-let slugid = require('slugid');
 
 var MemoryStream = require('memorystream');
 
 describe('logs', () => {
   let sandbox;
-  let realLogName = process.env.LOG_NAME;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    process.env.LOG_NAME = slugid.v4();
   });
 
   afterEach(() => {
     sandbox.restore();
-    process.env.LOG_NAME = realLogName;
   });
 
   describe('initialization', () => {
@@ -25,7 +21,7 @@ describe('logs', () => {
       let createLogger = sandbox.spy(logging.bunyan, "createLogger");
       let result = logging({name: 'test'});
       let expected = {
-        name: process.env.LOG_NAME,
+        name: 'test',
       };
       assert(createLogger.calledWithExactly(expected));
       assume(result.level()).equals(logging.bunyan.INFO);

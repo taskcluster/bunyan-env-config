@@ -4,8 +4,8 @@
   "description": "Logging library for Taskcluster",
   "main": "lib/log.js",
   "scripts": {
-    "test": "./test/runtests.sh",
-    "compile": "babel-compile -c taskcluster-lib-rules/babel src:lib",
+    "test": "mocha .test/*_tests.js",
+    "compile": "babel-compile -c taskcluster-lib-rules/babel src:lib test:.test",
     "pretest": "npm run compile",
     "prepublish": "npm run compile"
   },
@@ -30,6 +30,7 @@
     "mocha": "^2.3.3",
     "sinon": "^1.17.1",
     "slugid": "^1.1.0",
+    "source-map-support": "^0.3.2",
     "taskcluster-lib-rules": "^1.0.5"
   },
   "dependencies": {
