@@ -1,5 +1,5 @@
 {
-  "name": "taskcluster-logging",
+  "name": "taskcluster-lib-log",
   "version": "0.0.1",
   "description": "Logging library for Taskcluster",
   "main": "lib/log.js",
