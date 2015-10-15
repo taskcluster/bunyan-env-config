@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Logging library for Taskcluster",
   "main": "lib/log.js",
+  "bin": {
+    "bunyan": "./node_modules/bunyan/bin/bunyan"
+  },
   "scripts": {
     "test": "mocha .test/*_tests.js",
     "compile": "babel-compile -c taskcluster-lib-rules/babel src:lib test:.test",
@@ -24,7 +27,6 @@
   },
   "homepage": "https://github.com/taskcluster/taskcluster-logging",
   "devDependencies": {
-    "babel": "^5.8.23",
     "babel-compile": "0.0.3",
     "memorystream": "^0.3.1",
     "mocha": "^2.3.3",
