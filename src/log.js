@@ -9,13 +9,16 @@ let util = require('util');
 let allowedLevels = _.keys(bunyan.levelFromName);
 
 /**
- * Take an environment variable, turn it into pairings
- * of name:level strings and then determine if the parameter
- * `name` has a level.  If there's a level for that name,
- * return the string associated with it, otherwise return default
- *   env has the format: a: info,b:warn,*:fatal
- * * is the default log level.  If there's not a default specified
- * and the 'name' doesn't have a setting, the info level is used
+ * Parse a string into a mapping of logger names to levels to determine which
+ * level of logging a given logging module should use.  This is done so that we
+ * can optionally have Trace level for what you're working on but then only
+ * have warnings and higher for the rest of the code.  This is similar in
+ * concept to the debug module, but needs higher granularity because we have
+ * more than one log level.  There is currently no globbing support so you will
+ * have to specify all 'name' values in the variable as fully resolved.  The
+ * special value '*' as a name sets the log level for all levels not mentioned.
+ *
+ * Example Variable: "provisioner:trace, api:info,azure-entities:error, *:fatal"
  */
 function parseEnvironment(env, cfg) {
   assume(cfg).is.an('object');
@@ -40,11 +43,23 @@ function parseEnvironment(env, cfg) {
   return _default;
 }
 
+/**
+ * Create a root logger with the name given by name.  The object returned from
+ * this function is a root logger.  The design is that each service, component
+ * or library will use a single root logger object that's initialised a single
+ * time.
+ *
+ * A configuration can be passed in as the second parameter.  This object must
+ * be a valid bunyan logging configuration.
+ */
 function setupLogger(name, cfg) {
   assume(name).is.a('string');
-  assume(cfg).is.an('object');
-  // negate this check
-  //assume(cfg).includes('name');
+  if (cfg) {
+    assume(cfg).is.an('object');
+    assume(cfg).not.includes('name');
+  } else {
+    cfg = {};
+  }
   cfg.name = name;
 
   // Sometimes, just make it easy to have everything show the file and line
@@ -76,16 +91,28 @@ function setupLogger(name, cfg) {
   return logger;
 }
 
-// For unit testing!
+/**
+ * We export the bunyan module as a convenience
+ */
 setupLogger.bunyan = bunyan
+
+/**
+ * We export the parseEnvironment function so that unit testing 
+ * can be done easily
+ */
 setupLogger.__parseEnv = parseEnvironment;
 
-// To support migration away from the debug module that we used to use, we have
-// a compatibility function which we use to provide the same interface as the
-// debug module.  We default to the WARN log level for all compatibility
-// messages which do not contain the '[alert-operator]' substring.  This
-// substring is a common convention in taskcluster components written with the
-// debug module and should be treated as something which needs to be handled.
+/**
+ * In order to ease the transition from using the debug module for logging to
+ * using this library, we have a function that allows the root logger to expose
+ * an api similar to the debug module.  The first returned function takes a
+ * name to use as the debug name and returns a function which accepts log
+ * messages.  The log messages can use util.format formatting to produce
+ * desired output.
+ *
+ * This method does not inspect the debug module's DEBUG environment variable
+ * although that would be a good idea.
+ */
 function makeCompat(logger) {
   return function(name) {
     return function(...x) {
