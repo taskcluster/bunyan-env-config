@@ -1,7 +1,7 @@
 {
-  "name": "taskcluster-lib-log",
+  "name": "bunyan-env-config",
   "version": "0.0.1",
-  "description": "Logging library for Taskcluster",
+  "description": "Configure bunyan log levels from Environment like debug",
   "main": "lib/log.js",
   "bin": {
     "bunyan": "./node_modules/bunyan/bin/bunyan"
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taskcluster/taskcluster-logging.git"
+    "url": "git+https://github.com/taskcluster/bunyan-env-config.git"
   },
   "keywords": [
     "taskcluster",
@@ -22,10 +22,6 @@
   ],
   "author": "John Ford <jhford.mozilla@com>",
   "license": "MPL-2.0",
-  "bugs": {
-    "url": "https://github.com/taskcluster/taskcluster-logging/issues"
-  },
-  "homepage": "https://github.com/taskcluster/taskcluster-logging",
   "devDependencies": {
     "babel-compile": "0.0.3",
     "memorystream": "^0.3.1",
