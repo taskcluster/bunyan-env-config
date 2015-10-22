@@ -29,29 +29,43 @@ describe('logs', () => {
       assert(createLogger.calledWithExactly(expected));
     });
 
-    it('should parse valid env', () => {
-      let env = 'a:info, b:trace,c:warn,*:fatal';
-      assume(logging.__parseEnv(env, {name: 'a'})).equals('info');
-      assume(logging.__parseEnv(env, {name: 'b'})).equals('trace');
-      assume(logging.__parseEnv(env, {name: 'c'})).equals('warn');
-      assume(logging.__parseEnv(env, {name: 'z'})).equals('fatal');
-      env = 'a:info, b:trace,c:warn';
-      assume(logging.__parseEnv(env, {name: 'z'})).equals('info');
-    });
+    let goodEnvs = [
+      ['test:info', 'test', 'info'],
+      ['test:with:lots:of:colons:warn', 'test:with:lots:of:colons', 'warn'],
+      ['test*:warn', 'testing', 'warn'],
+      ['testing:athing*:warn', 'testing:athingwell', 'warn'],
+      ['*:warn', 'a:thing', 'warn'],
+      ['*test:warn', 'atest', 'warn'],
+    ];
+
+    for (let [env, name, expected] of goodEnvs) {
+      it('should parse ' + env + ' from ' + name + ' to ' + expected, () => {
+        let cfg = {
+          name: name,
+          level: 'trace',
+        };
+        assume(logging.__parseEnv(env, cfg)).equals(expected);
+      });
+    }
+
+    let badEnvs = [
+      'abcd',
+      'no:level',
+    ];
     
-    it('should throw for an invalid env', done => {
-      for (let x of ['abcd']) {
+    for (let x of badEnvs) {
+      it('should throw for invalid env ' + x, () => {
         try {
           assume(logging.__parseEnv(x, {name: 'a'}));
-          done(new Error('this env should raise! ' + x));
+          throw new Error('this env should raise! ' + x);
         } catch (err) {
-          if (!err.message.match(/^Invalid log level/)) {
-            return done(err); // return or we get multiple done() calls
+          if (!err.message.match(/^Log levels must use format/) &&
+              !err.message.match(/^Invalid log level setting/)) {
+            throw err; // return or we get multiple done() calls
           }
         }
-      }
-      done();
-    });
+      });
+    }
   });
 
   describe('functionality', () => {

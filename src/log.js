@@ -5,6 +5,7 @@ let _ = require('lodash');
 let bunyan = require('bunyan');
 let assume = require('assume');
 let util = require('util');
+let minimatch = require('minimatch');
 
 let allowedLevels = _.keys(bunyan.levelFromName);
 
@@ -29,14 +30,22 @@ function parseEnvironment(env, cfg) {
   assume(env).is.a('string');
   let modules = env.split(',').map(x => x.trim());
   for (let x of modules) {
-    let [n, l] = x.split(':');
-    if (allowedLevels.indexOf(l) === -1) {
-      throw new Error('Invalid log level setting "' + x + '"');
+    let tokens = x.split(':');
+    if (tokens.length < 2) {
+      let errStr = 'Log levels must use format name:level ' +
+        'not ' + tokens.join(':');
+      debug(errStr);
+      throw new Error(errStr);
     }
-    if (n === '*') {
-      _default = l;
-    } else if (n === cfg.name) {
-      return l;
+    let level = tokens.slice(tokens.length - 1)[0];
+    let name = tokens.slice(0, tokens.length - 1).join(':');
+    if (allowedLevels.indexOf(level) === -1) {
+      let errStr = 'Invalid log level setting: ' + level;
+      debug(errStr);
+      throw new Error(errStr);
+    }
+    if (minimatch(cfg.name, name)) {
+      return level;
     }
   }
 
