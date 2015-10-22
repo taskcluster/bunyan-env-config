@@ -1,6 +1,5 @@
 // We only use this here because we want *something* to output if we fail to
 // initialize the backing logging library
-let debug = require('debug')('taskcluster-logging');
 let _ = require('lodash');
 let bunyan = require('bunyan');
 let assume = require('assume');
@@ -34,14 +33,12 @@ function parseEnvironment(env, cfg) {
     if (tokens.length < 2) {
       let errStr = 'Log levels must use format name:level ' +
         'not ' + tokens.join(':');
-      debug(errStr);
       throw new Error(errStr);
     }
     let level = tokens.slice(tokens.length - 1)[0];
     let name = tokens.slice(0, tokens.length - 1).join(':');
     if (allowedLevels.indexOf(level) === -1) {
       let errStr = 'Invalid log level setting: ' + level;
-      debug(errStr);
       throw new Error(errStr);
     }
     if (minimatch(cfg.name, name)) {
