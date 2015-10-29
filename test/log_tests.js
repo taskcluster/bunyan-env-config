@@ -2,6 +2,7 @@ let logging = require('../lib/log');
 let sinon = require('sinon');
 let assume = require('assume');
 let assert = require('assert');
+let bunyan = require('bunyan');
 
 var MemoryStream = require('memorystream');
 
@@ -51,8 +52,9 @@ describe('logs', () => {
     let badEnvs = [
       'abcd',
       'no:level',
+      'nopatternsinleves:info*',
     ];
-    
+
     for (let x of badEnvs) {
       it('should throw for invalid env ' + x, () => {
         try {
@@ -130,30 +132,14 @@ describe('logs', () => {
       });
     });
 
-    it('should write to all log levels properly', () => {
-      log.trace('trace');
-      log.debug('debug');
-      log.info('info');
-      log.warn('warn');
-      log.error('error');
-      log.fatal('fatal');
 
-      let expected = [
-        'trace',
-        'debug',
-        'info',
-        'warn',
-        'error',
-        'fatal',
-      ];
-      let outputMsgs = output.split('\n').filter(y => y).map(y => JSON.parse(y));
-
-      let num = 10;
-      for (let x = 0 ; x < expected.length ; x++) {
-        assume(outputMsgs[x].msg).equals(expected[x]);
-        assume(outputMsgs[x].level).equals(num);
-        num += 10;
-      }
-    });
+    for (let level of ['trace', 'debug', 'info', 'warn', 'error', 'fatal']) {
+      it(`should write to ${level} log level properly`, () => {
+        log[level].call(log, level);
+        let outputMsgs = output.split('\n').filter(y => y).map(y => JSON.parse(y));
+        assume(outputMsgs[0].msg).equals(level);
+        assume(outputMsgs[0].level).equals(bunyan.levelFromName[level]);
+      });
+    }
   });
 });
