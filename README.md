@@ -1,4 +1,4 @@
-# bunyan-env-config
+# taskcluster-lib-config
 
 A small configuration wrapper around Bunyan logging.  This module's main
 purpose is to contain all the taskcluster boiler plate and configuration logic
