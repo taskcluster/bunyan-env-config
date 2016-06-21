@@ -4,7 +4,7 @@ let assume = require('assume');
 let assert = require('assert');
 let bunyan = require('bunyan');
 
-var MemoryStream = require('memorystream');
+let MemoryStream = require('memorystream');
 
 assert(!process.env.LOG_LEVEL, 'Do not run tests with LOG_LEVEL');
 
