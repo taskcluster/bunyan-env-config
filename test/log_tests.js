@@ -136,6 +136,10 @@ describe('logs', () => {
       it(`debugCompat should work with a ${typeof x} with value ${JSON.stringify(x)}`, () => {
         log.debugCompat('hi')(x);
       });
+
+      it(`normal logging should work with a ${typeof x} with value ${JSON.stringify(x)}`, () => {
+        log.info(x);
+      });
     }
 
     for (let level of ['trace', 'debug', 'info', 'warn', 'error', 'fatal']) {
