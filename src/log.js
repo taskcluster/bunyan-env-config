@@ -124,8 +124,6 @@ function makeCompat(logger) {
     return function(...x) {
       assume(x).is.an('array');
       assume(x.length).greaterThan(0);
-      assume(x[0]).is.ok();
-      assume(x[0]).is.a('string');
       let msg = util.format.apply(null, x);
       let level = 'warn';
       let msgObj = {

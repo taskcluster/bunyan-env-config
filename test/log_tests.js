@@ -132,6 +132,11 @@ describe('logs', () => {
       });
     });
 
+    for (let x of ['string', 123, '', {}, {a:1}, null, undefined]) {
+      it(`debugCompat should work with a ${typeof x} with value ${JSON.stringify(x)}`, () => {
+        log.debugCompat('hi')(x);
+      });
+    }
 
     for (let level of ['trace', 'debug', 'info', 'warn', 'error', 'fatal']) {
       it(`should write to ${level} log level properly`, () => {
