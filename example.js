@@ -1,5 +1,13 @@
 // First let's import the logging module
-var logging = require('./lib/log') || require('./lib/log');
+var logging;
+
+// Since we're in the lib-log library itself right now,
+// we'll first try to use the in-repo copy
+try {
+  logging = require('./lib/log');
+} catch (err) {
+  logging = require('taskcluster-lib-log');
+}
 
 // Now let's create a root logger.  This can either be done using a shared
 // module so that all parts of the application use the same root logger or you
@@ -64,9 +72,9 @@ child.info('hi');
     tLog = rLog.child({type: type});
     try {
       killAllInstances(region, type);
-      log.info('Killed all instances');
+      tLog.info('Killed all instances');
     } catch (e) {
-      log.error({err: e}, 'Error killing all instances');
+      tLog.error({err: e}, 'Error killing all instances');
     }
   });
 });
