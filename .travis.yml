@@ -5,3 +5,11 @@ node_js:
 - '5'
 - stable
 script: npm test
+deploy:
+  provider: npm
+  email: taskcluster-accounts@mozilla.com
+  api_key:
+    secure: OOiaEls9vrjO0pDpqtLt7x4mI53tVgBmIefZ1/b5uWSwq9TXbtj5RvOeLgvyDXi8ndXbGYuLSlojxNUmq7Xd0HA6uGVJymy4PFf4hl+AtIhIcIbr18SKzbcxH4DPu31fkHXRCUE+FZRxAo7UTEwwTvnyqCcr4deHy7KiJzyDu9Z0UPr75X7wo1rLXF63t5Hjp+Z4KiFx7N/eMzSFrVIz6vGE/+GJS2txhkkqyP+AsUTxGu9WniMoL/Awclm8ndNj4fHoePlnusq5fGSingLWH1VmWA9pCI7Uhds2/eQPKQHvUGTzqQKLinSnWIBNIMierQZuKubCmyQov1wEaNrahdvr04cGK2qMP3gxZ6lRTXHTBdrZ3pPAZp4EnFSL2sqRexgK63MZQR3TvCetKGg0DOU/qNbYeoEjiQQC8RbKfJDFFEi643jPsr8wdDhTO1um1kXyxkVd1tzJkEwRaA9/YP1uvWOGbPDDoTThwWkmLwUmd41vTYDeYlsLzMMSeiZvZgF2Z8drLaQqHLEmvup12AtahEOTZWSyIsH+H5C0//a0XqC6SiTs17BjXAS/JTzGP14n69g+EDwaa/i0hqUeL0PP/N8emXgMDI6FsOup++JTTNXi8qfzxHEeZ39xUUA8sdCRahUwdWWFcZ/Gp4ZunPCrW/Z9jH/wM0g21qKRewg=
+  on:
+    tags: true
+    repo: taskcluster/taskcluster-lib-log
