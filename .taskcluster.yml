@@ -1,6 +1,6 @@
 version: 0
 metadata:
-  name: taskcluster-lib-logs
+  name: taskcluster-lib-log
   description: 'Logging library for taskcluster'
   owner: '{{ event.head.user.email }}'
   source: '{{ event.head.repo.url }}'
@@ -31,7 +31,7 @@ tasks:
           yarn &&
           yarn test
     metadata:
-      name: taskcluster-lib-logs test run
+      name: taskcluster-lib-log test run
       description: Run library test suite
       owner: '{{ event.head.user.email }}'
       source: '{{ event.head.repo.url }}'
@@ -44,7 +44,7 @@ tasks:
         branches:
           - master
     scopes:
-      - auth:aws-s3:read-write:taskcluster-raw-docs/taskcluster-lib-logs/
+      - auth:aws-s3:read-write:taskcluster-raw-docs/taskcluster-lib-log/
     payload:
       maxRunTime: 3600
       image: taskcluster/upload-project-docs:latest
@@ -60,10 +60,10 @@ tasks:
           cd repo &&
           git config advice.detachedHead false &&
           git checkout {{event.head.sha}} &&
-          export DEBUG=* DOCS_PROJECT=taskcluster-lib-logs DOCS_TIER=libraries DOCS_FOLDER=docs DOCS_README=README.md &&
+          export DEBUG=* DOCS_PROJECT=taskcluster-lib-log DOCS_TIER=libraries DOCS_FOLDER=docs DOCS_README=README.md &&
           upload-project-docs
     metadata:
-      name: "taskcluster-lib-logs docs upload"
+      name: "taskcluster-lib-log docs upload"
       description: "Upload documentation for this project"
       owner: '{{ event.head.user.email }}'
       source: '{{ event.head.repo.url }}'
