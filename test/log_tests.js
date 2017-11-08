@@ -21,7 +21,7 @@ describe('logs', () => {
 
   describe('initialization', () => {
     it('should default to level INFO', () => {
-      let createLogger = sandbox.spy(logging.bunyan, "createLogger");
+      let createLogger = sandbox.spy(logging.bunyan, 'createLogger');
       let result = logging('test', {});
       let expected = {
         name: 'test',

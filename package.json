@@ -9,8 +9,9 @@
   "scripts": {
     "test": "mocha .test/*_tests.js",
     "compile": "babel-compile -p taskcluster src:lib test:.test",
-    "pretest": "npm run compile",
-    "prepublish": "npm run compile"
+    "lint": "eslint src/*.js test/*.js",
+    "pretest": "yarn lint && yarn compile",
+    "prepare": "yarn compile"
   },
   "repository": {
     "type": "git",
@@ -38,5 +39,8 @@
     "sinon": "^1.17.1",
     "slugid": "^1.1.0",
     "source-map-support": "^0.4.0"
+  },
+  "devDependencies": {
+    "eslint-config-taskcluster": "^3.0.0"
   }
 }
