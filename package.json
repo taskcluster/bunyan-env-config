@@ -1,6 +1,6 @@
 {
   "name": "taskcluster-lib-log",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Configure bunyan log levels from Environment like debug",
   "main": "lib/log.js",
   "bin": {
