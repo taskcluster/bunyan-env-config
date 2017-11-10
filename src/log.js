@@ -87,7 +87,7 @@ function setupLogger(name, cfg) {
     if (oldLevel !== envLevel) {
       logger.warn({
         requested: oldLevel,
-        used: envLevel
+        used: envLevel,
       }, 'using log level from environment instead of code');
     }
   }
@@ -100,7 +100,7 @@ function setupLogger(name, cfg) {
 /**
  * We export the bunyan module as a convenience
  */
-setupLogger.bunyan = bunyan
+setupLogger.bunyan = bunyan;
 
 /**
  * We export the parseEnvironment function so that unit testing 
@@ -135,8 +135,8 @@ function makeCompat(logger) {
         msgObj.alert = true;
       }
       logger[level].call(logger, msgObj, msg);
-    }
-  }
+    };
+  };
 }
 
 module.exports = setupLogger;
