@@ -6,9 +6,14 @@
   "bin": {
     "bunyan": "./node_modules/bunyan/bin/bunyan"
   },
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
     "test": "mocha .test/*_tests.js",
     "compile": "babel-compile -p taskcluster src:lib test:.test",
+    "prepublish": "npm run compile",
     "lint": "eslint src/*.js test/*.js",
     "pretest": "yarn lint && yarn compile",
     "prepare": "yarn compile"
@@ -28,19 +33,18 @@
   },
   "dependencies": {
     "assume": "^1.5.2",
-    "babel-compile": "^2.0.0",
-    "babel-preset-taskcluster": "^3.0.0",
     "babel-runtime": "^6.26.0",
     "bunyan": "^1.8.12",
     "lodash": "^4.17.4",
-    "memorystream": "^0.3.1",
-    "minimatch": "^3.0.4",
-    "mocha": "^4.0.1",
-    "sinon": "^4.1.2",
-    "slugid": "^1.1.0",
-    "source-map-support": "^0.5.0"
+    "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "eslint-config-taskcluster": "^3.0.0"
+    "babel-compile": "^2.0.0",
+    "babel-preset-taskcluster": "^3.0.0",
+    "eslint-config-taskcluster": "^3.0.0",
+    "memorystream": "^0.3.1",
+    "mocha": "^4.0.1",
+    "sinon": "^4.1.2",
+    "source-map-support": "^0.5.0"
   }
 }
