@@ -1,11 +1,8 @@
 {
   "name": "taskcluster-lib-log",
   "version": "2.0.1",
-  "description": "Configure bunyan log levels from Environment like debug",
+  "description": "A configuration wrapper around Bunyan logging",
   "main": "lib/log.js",
-  "bin": {
-    "bunyan": "./node_modules/bunyan/bin/bunyan"
-  },
   "files": [
     "src",
     "lib"
@@ -20,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taskcluster/bunyan-env-config.git"
+    "url": "git+https://github.com/taskcluster/taskcluster-lib-log.git"
   },
   "keywords": [
     "taskcluster",
