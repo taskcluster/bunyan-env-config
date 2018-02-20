@@ -1,12 +1,11 @@
 // We only use this here because we want *something* to output if we fail to
 // initialize the backing logging library
-let _ = require('lodash');
 let bunyan = require('bunyan');
 let assume = require('assume');
 let util = require('util');
 let minimatch = require('minimatch');
 
-let allowedLevels = _.keys(bunyan.levelFromName);
+let allowedLevels = Object.keys(bunyan.levelFromName);
 
 /**
  * Parse a string into a mapping of logger names to levels to determine which
