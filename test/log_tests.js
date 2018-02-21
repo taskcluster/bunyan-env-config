@@ -1,4 +1,4 @@
-let logging = require('../lib/log');
+let logging = require('../');
 let sinon = require('sinon');
 let assume = require('assume');
 let assert = require('assert');
