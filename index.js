@@ -79,6 +79,11 @@ function setupLogger(name, cfg) {
   let envLevel = parseEnvironment(process.env.LOG_LEVEL, cfg);
   let oldLevel = cfg.level;
   cfg.level = envLevel;
+
+  cfg.serializers = {
+    err: bunyan.stdSerializers.err,
+  };
+
   let logger = bunyan.createLogger(cfg);
 
   // But let's make it clear that we did this by logging

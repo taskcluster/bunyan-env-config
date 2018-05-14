@@ -3,10 +3,13 @@ let sinon = require('sinon');
 let assume = require('assume');
 let assert = require('assert');
 let bunyan = require('bunyan');
+let http = require('http');
 
 let MemoryStream = require('memorystream');
 
-assert(!process.env.LOG_LEVEL, 'Do not run tests with LOG_LEVEL');
+if (process.env.LOG_LEVEL) {
+  throw new Error('Do not run tests with LOG_LEVEL set');
+}
 
 describe('logs', () => {
   let sandbox;
@@ -26,8 +29,10 @@ describe('logs', () => {
       let expected = {
         name: 'test',
         level: 'info',
+        serializers: sinon.match.any,
       };
-      assert(createLogger.calledWithExactly(expected));
+
+      sandbox.assert.calledWithExactly(createLogger, expected);
     });
 
     let goodEnvs = [
@@ -150,5 +155,47 @@ describe('logs', () => {
         assume(outputMsgs[0].level).equals(bunyan.levelFromName[level]);
       });
     }
+
+    // We're not trying to test the built-in serializers, but we do want to
+    // make sure that their behaviour happens. 
+    describe('serializers', () => {
+
+      // We want to use a standard Error object...
+      let err = new Error('Testing!');
+      // but also attach a property to ensure it's there
+      err.code = 'testing';
+
+      it('should serialize errors passed as only structured log object', () => {
+        log.error(err, 'error');
+        let outputMsgs = output.split('\n').filter(y => y).map(y => JSON.parse(y));
+        assume(outputMsgs).has.lengthOf(1);
+        assume(outputMsgs[0]).has.property('err');
+        assume(outputMsgs[0].err).has.property('message', err.message);
+        assume(outputMsgs[0].err).has.property('code', err.code);
+        assume(outputMsgs[0].err).has.property('name', 'Error');
+        assume(outputMsgs[0].err).has.property('stack');
+        // We using the precense of the filename of this file as a proxy for
+        // whether or not the stack trace that was printed is valid.  No matter
+        // what, if the filename of this file is not in the stack we're going
+        // to need to investigate!
+        assume(outputMsgs[0].err.stack).contains(__filename);
+      });
+      
+      it('should serialize errors passed as the err property', () => {
+        log.error({err}, 'error');
+        let outputMsgs = output.split('\n').filter(y => y).map(y => JSON.parse(y));
+        assume(outputMsgs).has.lengthOf(1);
+        assume(outputMsgs[0]).has.property('err');
+        assume(outputMsgs[0].err).has.property('message', err.message);
+        assume(outputMsgs[0].err).has.property('code', err.code);
+        assume(outputMsgs[0].err).has.property('name', 'Error');
+        assume(outputMsgs[0].err).has.property('stack');
+        // We using the precense of the filename of this file as a proxy for
+        // whether or not the stack trace that was printed is valid.  No matter
+        // what, if the filename of this file is not in the stack we're going
+        // to need to investigate!
+        assume(outputMsgs[0].err.stack).contains(__filename);
+      });
+    });
   });
 });
