@@ -1,6 +1,6 @@
 {
   "name": "taskcluster-lib-log",
-  "version": "3.0.0",
+  "version": "10.0.0",
   "description": "A configuration wrapper around Bunyan logging",
   "main": "index.js",
   "files": [
